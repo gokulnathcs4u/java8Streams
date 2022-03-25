@@ -1,7 +1,6 @@
 package com.java8streams.service;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +23,23 @@ public class NovelService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public NovelResponse getAllUrl() throws ApiException {
-		ResponseEntity<CovidAll> responseEntity = restTemplate
-				.getForEntity(novelApiUrl.getHostName() + novelApiUrl.getAll(), CovidAll.class);
+	public NovelResponse getAllUrl(Boolean yesterday, Boolean twoDaysAgo, Boolean allowNull) throws ApiException {
+		ResponseEntity<CovidAll> responseEntity = restTemplate.getForEntity(
+				novelApiUrl.getHostName() + novelApiUrl.getAll(), CovidAll.class, yesterday, twoDaysAgo, allowNull);
 		if (Objects.nonNull(responseEntity)) {
 			NovelResponse resp = new NovelResponse();
-			resp.setRespTime(new Date());
 			if (responseEntity.getStatusCode().is2xxSuccessful()) {
 				resp.setStatus(responseEntity.getStatusCode());
 				resp.setValues(Arrays.asList(responseEntity.getBody()));
 				resp.setCount(resp.getValues().size());
 			} else {
-				throw new ApiException(new ErrorBo(responseEntity.getStatusCode(),responseEntity.getStatusCode().getReasonPhrase()));
+				throw new ApiException(
+						new ErrorBo(responseEntity.getStatusCode(), responseEntity.getStatusCode().getReasonPhrase()));
 			}
 			return resp;
 		} else {
-			throw new ApiException(new ErrorBo(HttpStatus.SERVICE_UNAVAILABLE,HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase()));
+			throw new ApiException(
+					new ErrorBo(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase()));
 		}
 	}
 

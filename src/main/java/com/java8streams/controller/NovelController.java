@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java8streams.Exception.ApiException;
@@ -20,11 +21,13 @@ public class NovelController {
 	private NovelService novelService;
 
 	@GetMapping("/all")
-	public ResponseEntity<NovelResponse> getAllCovid() throws NovelException {
+	public ResponseEntity<NovelResponse> getAllCovid(@RequestParam(required = false) Boolean yesterday,
+			@RequestParam(required = false) Boolean twoDaysAgo, @RequestParam(required = false) Boolean allowNull)
+			throws NovelException {
 		NovelResponse resp = new NovelResponse();
 		resp.setStatus(HttpStatus.SERVICE_UNAVAILABLE);
 		try {
-			resp = novelService.getAllUrl();
+			resp = novelService.getAllUrl(yesterday, twoDaysAgo, allowNull);
 		} catch (ApiException exception) {
 			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
 					exception);
