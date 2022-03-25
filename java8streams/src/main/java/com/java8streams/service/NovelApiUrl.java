@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Configuration
-@PropertySource(value = { "novel.properties" })
+@PropertySource(value = { "classpath:/novel.properties" })
 @ConfigurationProperties(prefix = "novel.api")
 public class NovelApiUrl {
 	private String hostName;
