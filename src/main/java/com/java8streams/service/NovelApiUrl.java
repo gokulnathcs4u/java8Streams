@@ -21,4 +21,7 @@ public class NovelApiUrl {
 	private String allowNull;
 	private String continents;
 	private String continent;
+	private String countries;
+	private String country;
+	private String history;
 }

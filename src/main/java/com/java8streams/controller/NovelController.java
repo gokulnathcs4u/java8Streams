@@ -133,6 +133,16 @@ public class NovelController {
 		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
 	}
 
+	/**
+	 * 
+	 * @param continent
+	 * @param yesterday
+	 * @param twoDaysAgo
+	 * @param strict
+	 * @param allowNull
+	 * @return
+	 * @throws NovelException
+	 */
 	@GetMapping("/continents/{continent}")
 	public ResponseEntity<NovelResponse> getContinent(@PathVariable(required = true) String continent,
 			@RequestParam(required = false) Boolean yesterday, @RequestParam(required = false) Boolean twoDaysAgo,
@@ -141,6 +151,74 @@ public class NovelController {
 		NovelResponse resp = new NovelResponse();
 		try {
 			resp = novelService.getContinent(continent, yesterday, twoDaysAgo, strict, allowNull);
+		} catch (ApiException exception) {
+			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
+					exception);
+		} catch (Exception exception) {
+			if (exception.getMessage().startsWith("40")) {
+				throw new NovelException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), exception);
+			}
+			throw new NovelException(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
+					exception);
+		}
+		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
+	}
+
+	/**
+	 * 
+	 * @param yesterday
+	 * @param twoDaysAgo
+	 * @param sort
+	 * @param allowNull
+	 * @return
+	 * @throws NovelException
+	 */
+	@GetMapping("/countries")
+	public ResponseEntity<NovelResponse> getCountries(@RequestParam(required = false) Boolean yesterday,
+			@RequestParam(required = false) Boolean twoDaysAgo, @RequestParam(required = false) String sort,
+			@RequestParam(required = false) Boolean allowNull) throws NovelException {
+		NovelResponse resp = new NovelResponse();
+		try {
+			resp = novelService.getCountries(yesterday, twoDaysAgo, sort, allowNull);
+		} catch (ApiException exception) {
+			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
+					exception);
+		} catch (Exception exception) {
+			if (exception.getMessage().startsWith("40")) {
+				throw new NovelException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), exception);
+			}
+			throw new NovelException(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
+					exception);
+		}
+		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
+	}
+
+	@GetMapping("/countries/{country}")
+	public ResponseEntity<NovelResponse> getCountry(@PathVariable(required = true) String country,
+			@RequestParam(required = false) Boolean yesterday, @RequestParam(required = false) Boolean twoDaysAgo,
+			@RequestParam(required = false) Boolean strict, @RequestParam(required = false) Boolean allowNull)
+			throws NovelException {
+		NovelResponse resp = new NovelResponse();
+		try {
+			resp = novelService.getCountry(country, yesterday, twoDaysAgo, strict, allowNull);
+		} catch (ApiException exception) {
+			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
+					exception);
+		} catch (Exception exception) {
+			if (exception.getMessage().startsWith("40")) {
+				throw new NovelException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), exception);
+			}
+			throw new NovelException(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
+					exception);
+		}
+		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
+	}
+
+	@GetMapping("/history")
+	public ResponseEntity<NovelResponse> getHistory() throws NovelException {
+		NovelResponse resp = new NovelResponse();
+		try {
+			resp = novelService.getHistory();
 		} catch (ApiException exception) {
 			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
 					exception);
