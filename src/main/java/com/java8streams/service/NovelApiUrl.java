@@ -19,4 +19,6 @@ public class NovelApiUrl {
 	private String state;
 	private String yesterday;
 	private String allowNull;
+	private String continents;
+	private String continent;
 }

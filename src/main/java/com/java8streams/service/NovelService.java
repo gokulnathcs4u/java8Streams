@@ -18,6 +18,7 @@ import com.java8streams.Exception.ApiException;
 import com.java8streams.Exception.ErrorBo;
 import com.java8streams.config.response.NovelResponse;
 import com.java8streams.model.CovidAll;
+import com.java8streams.model.CovidContinent;
 import com.java8streams.model.CovidState;
 
 /**
@@ -161,8 +162,8 @@ public class NovelService {
 		if (Objects.nonNull(yesterday)) {
 			sb.append(yesterday);
 		}
-		if (Objects.nonNull(yesterday)) {
-			sb.append(yesterday);
+		if (Objects.nonNull(allowNull)) {
+			sb.append(allowNull);
 		}
 		ResponseEntity<CovidState> responseEntity = restTemplate.exchange(sb.toString(), HttpMethod.GET, null,
 				CovidState.class);
@@ -185,6 +186,142 @@ public class NovelService {
 			throw new ApiException(
 					new ErrorBo(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase()));
 		}
+	}
+
+	/**
+	 * 
+	 * @param yesterday
+	 * @param twoDaysAgo
+	 * @param sort
+	 * @param allowNull
+	 * @return
+	 * @throws ApiException
+	 */
+	public NovelResponse getContinents(Boolean yesterday, Boolean twoDaysAgo, String sort, Boolean allowNull) throws ApiException {
+		ResponseEntity<List<CovidContinent>> responseEntity = restTemplate.exchange(
+				novelApiUrl.getHostName() + novelApiUrl.getContinents(), HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<CovidContinent>>() {
+				}, sort, yesterday, twoDaysAgo, allowNull);
+		if (Objects.nonNull(responseEntity)) {
+			NovelResponse resp = new NovelResponse();
+			if (responseEntity.getStatusCode().is2xxSuccessful()) {
+				resp.setStatus(responseEntity.getStatusCode());
+				List<CovidContinent> covidContinentList = responseEntity.getBody();
+				if (Objects.nonNull(sort)) {
+					Comparator<CovidContinent> comparator = sortCovidContinent(sort);
+					covidContinentList.stream().sorted(comparator).collect(Collectors.toList());
+				}
+				resp.setValues(covidContinentList);
+				resp.setCount(covidContinentList.size());
+			} else {
+				throw new ApiException(
+						new ErrorBo(responseEntity.getStatusCode(), responseEntity.getStatusCode().getReasonPhrase()));
+			}
+			return resp;
+		} else {
+			throw new ApiException(
+					new ErrorBo(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase()));
+		}
+	}
+
+	/**
+	 * 
+	 * @param sort
+	 * @return
+	 */
+	private Comparator<CovidContinent> sortCovidContinent(String sort) {
+		Comparator<CovidContinent> comparator = null;
+		List<String> sortLst = sort.contains(",") ? Arrays.asList(sort.split(",")) : Arrays.asList(sort);
+		for (String sortVal : sortLst) {
+			if (sortVal.equalsIgnoreCase("cases")) {
+				if (Objects.isNull(comparator)) {
+					comparator = Comparator.comparing(CovidContinent::getCases).reversed();
+				}
+			}
+			if (sortVal.equalsIgnoreCase("todayCases")) {
+				if (Objects.isNull(comparator)) {
+					comparator = Comparator.comparing(CovidContinent::getTodayCases).reversed();
+				} else {
+					comparator.thenComparing(Comparator.comparing(CovidContinent::getTodayCases).reversed());
+				}
+			}
+			if (sortVal.equalsIgnoreCase("deaths")) {
+				if (Objects.isNull(comparator)) {
+					comparator = Comparator.comparing(CovidContinent::getDeaths).reversed();
+				} else {
+					comparator.thenComparing(Comparator.comparing(CovidContinent::getDeaths).reversed());
+				}
+			}
+			if (sortVal.equalsIgnoreCase("todayDeaths")) {
+				if (Objects.isNull(comparator)) {
+					comparator = Comparator.comparing(CovidContinent::getTodayDeaths).reversed();
+				} else {
+					comparator.thenComparing(Comparator.comparing(CovidContinent::getTodayDeaths).reversed());
+				}
+			}
+			if (sortVal.equalsIgnoreCase("active")) {
+				if (Objects.isNull(comparator)) {
+					comparator = Comparator.comparing(CovidContinent::getActive).reversed();
+				} else {
+					comparator.thenComparing(Comparator.comparing(CovidContinent::getActive).reversed());
+				}
+			}
+
+		}
+
+		return comparator;
+
+	}
+
+	/**
+	 * 
+	 * @param continent
+	 * @param yesterday
+	 * @param twoDaysAgo
+	 * @param strict
+	 * @param allowNull
+	 * @return
+	 * @throws ApiException 
+	 */
+	public NovelResponse getContinent(String continent, Boolean yesterday, Boolean twoDaysAgo, Boolean strict,
+			Boolean allowNull) throws ApiException {
+
+		StringBuilder sb = new StringBuilder(novelApiUrl.getHostName()).append(novelApiUrl.getContinent()).append(continent)
+				.append("?");
+		if (Objects.nonNull(yesterday)) {
+			sb.append(yesterday);
+		}
+		if (Objects.nonNull(twoDaysAgo)) {
+			sb.append(twoDaysAgo);
+		}
+		if (Objects.nonNull(strict)) {
+			sb.append(strict);
+		}
+		if (Objects.nonNull(allowNull)) {
+			sb.append(allowNull);
+		}
+		ResponseEntity<CovidContinent> responseEntity = restTemplate.exchange(sb.toString(), HttpMethod.GET, null,
+				CovidContinent.class);
+		if (Objects.nonNull(responseEntity)) {
+			NovelResponse resp = new NovelResponse();
+			if (responseEntity.getStatusCode().is2xxSuccessful()) {
+				resp.setStatus(responseEntity.getStatusCode());
+				CovidContinent covidContinent = responseEntity.getBody();
+				resp.setValues(covidContinent);
+				resp.setCount(1);
+			} else if (responseEntity.getStatusCode().is4xxClientError()) {
+				throw new ApiException(
+						new ErrorBo(responseEntity.getStatusCode(), responseEntity.getBody().toString()));
+			} else {
+				throw new ApiException(
+						new ErrorBo(responseEntity.getStatusCode(), responseEntity.getStatusCode().getReasonPhrase()));
+			}
+			return resp;
+		} else {
+			throw new ApiException(
+					new ErrorBo(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase()));
+		}
+	
 	}
 
 }
