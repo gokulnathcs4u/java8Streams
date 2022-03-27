@@ -20,6 +20,7 @@ import com.java8streams.service.NovelService;
  * @author GoCool
  *
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/novel")
 public class NovelController {
