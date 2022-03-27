@@ -219,7 +219,7 @@ public class NovelController {
 	@CrossOrigin
 	@GetMapping("/history")
 	public ResponseEntity<NovelResponse> getHistory() throws NovelException {
-		System.out.println("Getting called");
+		System.out.println("called");
 		NovelResponse resp = new NovelResponse();
 		try {
 			resp = novelService.getHistory();
