@@ -15,4 +15,8 @@ import lombok.Setter;
 public class NovelApiUrl {
 	private String hostName;
 	private String all;
+	private String states;
+	private String state;
+	private String yesterday;
+	private String allowNull;
 }
