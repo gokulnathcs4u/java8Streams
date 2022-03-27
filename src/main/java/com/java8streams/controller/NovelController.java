@@ -51,7 +51,7 @@ public class NovelController {
 		}
 		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
 	}
-	
+
 	/**
 	 * 
 	 * @param yesterday
@@ -77,7 +77,7 @@ public class NovelController {
 		}
 		return new ResponseEntity<NovelResponse>(resp, resp.getStatus());
 	}
-	
+
 	/**
 	 * 
 	 * @param yesterday
@@ -98,9 +98,8 @@ public class NovelController {
 			throw new NovelException(exception.getErrorBo().getErrorCode(), exception.getErrorBo().getDescription(),
 					exception);
 		} catch (Exception exception) {
-			if(exception.getMessage().startsWith("40")) {
-				throw new NovelException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(),
-						exception);
+			if (exception.getMessage().startsWith("40")) {
+				throw new NovelException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), exception);
 			}
 			throw new NovelException(HttpStatus.SERVICE_UNAVAILABLE, HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
 					exception);

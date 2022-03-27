@@ -12,7 +12,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.java8streams.Exception.ApiException;
@@ -153,7 +152,7 @@ public class NovelService {
 	/**
 	 * 
 	 * @param yesterday @param state @param allowNull @return @throws
-	 * ApiException @throws
+	 *                  ApiException @throws
 	 */
 	public NovelResponse getState(Boolean yesterday, String state, Boolean allowNull) throws ApiException {
 
