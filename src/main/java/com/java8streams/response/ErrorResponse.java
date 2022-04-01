@@ -1,4 +1,4 @@
-package com.java8streams.config.response;
+package com.java8streams.response;
 
 import java.time.LocalDateTime;
 

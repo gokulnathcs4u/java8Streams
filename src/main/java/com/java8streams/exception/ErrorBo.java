@@ -1,4 +1,4 @@
-package com.java8streams.Exception;
+package com.java8streams.exception;
 
 import org.springframework.http.HttpStatus;
 

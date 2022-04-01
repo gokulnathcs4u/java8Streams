@@ -14,14 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.java8streams.Exception.ApiException;
-import com.java8streams.Exception.ErrorBo;
-import com.java8streams.config.response.NovelResponse;
+import com.java8streams.exception.ApiException;
+import com.java8streams.exception.ErrorBo;
 import com.java8streams.model.CovidAll;
 import com.java8streams.model.CovidContinent;
 import com.java8streams.model.CovidCountry;
 import com.java8streams.model.CovidState;
 import com.java8streams.model.Covidhistory;
+import com.java8streams.response.NovelResponse;
 
 /**
  * 

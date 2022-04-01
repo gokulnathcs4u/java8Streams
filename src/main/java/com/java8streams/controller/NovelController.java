@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.java8streams.Exception.ApiException;
-import com.java8streams.Exception.NovelException;
-import com.java8streams.config.response.NovelResponse;
+import com.java8streams.exception.ApiException;
+import com.java8streams.exception.NovelException;
+import com.java8streams.response.NovelResponse;
 import com.java8streams.service.NovelService;
 
 /**
